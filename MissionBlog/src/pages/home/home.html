@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Countdown</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content class="container">
+  <ion-card class="card-contain">
+    <ion-item class="date-text">
+      <h1>Time Elder Shubin has been serving:</h1>
+      <!-- To display time with property binding -->
+      <ion-row wrap>
+        <ion-col>{{timeNow().years}}</ion-col>
+        <ion-col>{{timeNow().months}}</ion-col>
+        <ion-col>{{timeNow().days}}</ion-col>
+        <ion-col>{{timeNow().hours}}</ion-col>
+        <ion-col>{{timeNow().minutes}}</ion-col>
+        <ion-col>{{timeNow().seconds}}</ion-col>
+      </ion-row>
+    </ion-item>
+    <div class="mission-div">
+      <img class="mission-img" src="../../assets/imgs/elder-shubin.jpg">
+    </div>
+  </ion-card>
+</ion-content>

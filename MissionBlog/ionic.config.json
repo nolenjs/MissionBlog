@@ -1,0 +1,7 @@
+{
+  "name": "MissionBlog",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "ionic-angular"
+}

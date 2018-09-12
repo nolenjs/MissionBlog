@@ -1,0 +1,20 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Emails</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-item>Testing emails</ion-item>
+    <button (click)="getList()"></button>
+  </ion-card>
+  <ion-card *ngFor="let email of list">
+    <ion-card-title>{{email.day}}</ion-card-title>
+    <ion-card-header>{{email.subject}}</ion-card-header>
+    <ion-card-content>{{email.content}}</ion-card-content>
+  </ion-card>
+</ion-content>

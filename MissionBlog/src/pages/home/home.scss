@@ -1,0 +1,53 @@
+page-home {
+  ion-col {
+    font-weight: bold;
+  }
+
+  .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #5a9dd2;
+  }
+
+  .card-contain {
+    position: relative;
+    margin: 3% auto 0 auto;
+    padding: 5px;
+    width: 75%;
+    height: auto;
+    align-items: center;
+    background-color: whitesmoke;
+  }
+
+  .date-text {
+    width: auto;
+    max-width: 720px;
+    overflow: visible;
+  }
+
+  .mission-img {
+    margin-left: auto;
+    margin-right: auto;
+    z-index: 0;
+  }
+
+  .mission-div {
+    padding: 10px;
+    margin: 0 auto 0 auto;
+    height: auto;
+    width:auto;
+    max-height: 960px;
+    max-width: 720px;
+    align-self: center;
+    align-items: center;
+  }
+
+  @media only screen and (min-width: 900px) {
+    .card-contain {
+      width: 50%;
+      margin: 20px auto;
+    }
+  }
+
+}
