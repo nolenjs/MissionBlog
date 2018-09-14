@@ -70,6 +70,10 @@ function getNewToken(oAuth2Client, callback) {
 }
 
 //Where the GET requests come from
+
+/*Need to somehow get the messages from getMessages() to here, any ideas? even though the messages
+ are being saved in arr, it's saved asynchronously and having troubles keeping the code flow */
+
 app.get('/list', (req, res) => {
     listMessages();
 });
@@ -91,6 +95,9 @@ function listMessages() {
     });
 }
 
+//arr : msgs from above
+//msg : the selected item of arr (array used in the forEach method)
+//i : index of msg in arr
 function getMessage(msg, i, arr){
     const gmail = google.gmail({version: 'v1', auth});
     gmail.users.messages.get({
