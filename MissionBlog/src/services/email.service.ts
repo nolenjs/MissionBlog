@@ -12,8 +12,10 @@ export class EmailService {
   }
 
   getList(): Observable<IMessage[]>{
-    if (!this.msgList)
-      return this.http.get<IMessage[]>('http://localhost:3300/list');
+    if (!this.msgList){
+      this.msgList = this.http.get<IMessage[]>('http://localhost:3000/');
+      console.log(this.msgList);
+    }
     return this.msgList;
   }
 

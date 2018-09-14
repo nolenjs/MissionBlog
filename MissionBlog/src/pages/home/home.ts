@@ -1,11 +1,11 @@
-import { Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { NavController } from 'ionic-angular';
 
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
 })
-export class HomePage {
+export class HomePage implements OnInit{
   today: Date;
   leftDate: Date;
   percent: number;
@@ -24,7 +24,9 @@ export class HomePage {
     [0.4, 0.4, 0.4, 0.4, 0.4, 0.4], [0.4, 0.4, 0.4, 0.4, 0.4, 0.4]
   ];
 
-  constructor(public navCtrl: NavController) {
+  constructor(public navCtrl: NavController) {}
+
+  ngOnInit(){
     setInterval(this.timeNow, 1000)
   }
 
@@ -35,7 +37,7 @@ export class HomePage {
 
   timeNow(){
     this.today = new Date();
-    this.leftDate = new Date(2018, 8, 18, 21, 55, 0);
+    this.leftDate = new Date(2018, 8, 18, 19, 9, 0);
     console.log("time: ", this.today);
     let total = this.today.getTime() - this.leftDate.getTime();
     let t = Math.abs(total);
@@ -52,12 +54,12 @@ export class HomePage {
     this.percent = Math.floor(t / (1000 * 60 * 60 * 24)) / 7.2;
     console.log(this.percent);
     return {
-      years: this.service.years === 1 ? this.service.years + " year" : this.service.years + " years",
-      months: this.service.months === 1 ? this.service.months + " month" : this.service.months + " months",
-      days: this.service.days === 1 ? this.service.days + " day" : this.service.days + " days",
-      hours: this.service.hours === 1 ? this.service.hours + " hour" : this.service.hours + " hours",
-      minutes: this.service.minutes === 1 ? this.service.minutes + " minute" : this.service.minutes + " minutes",
-      seconds: this.service.seconds === 1 ? this.service.seconds + " second" : this.service.seconds + " seconds",
+      years: this.service.years <= 1 ? this.service.years + " year" : this.service.years + " years",
+      months: this.service.months <= 1 ? this.service.months + " month" : this.service.months + " months",
+      days: this.service.days <= 1 ? this.service.days + " day" : this.service.days + " days",
+      hours: this.service.hours <= 1 ? this.service.hours + " hour" : this.service.hours + " hours",
+      minutes: this.service.minutes <= 1 ? this.service.minutes + " minute" : this.service.minutes + " minutes",
+      seconds: this.service.seconds <= 1 ? this.service.seconds + " second" : this.service.seconds + " seconds",
     };
   }
 }

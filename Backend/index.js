@@ -7,21 +7,15 @@ const {google} = require('googleapis');
 const SCOPES = ['https://www.googleapis.com/auth/gmail.readonly'];
 const TOKEN_PATH = 'token.json';
 
-let auth;
-
 let app = express();
+
+let auth;
 
 // Load client secrets from a local file.
 fs.readFile('credentials.json', (err, content) => {
     if (err) return console.log('Error loading client secret file:', err);
 // Authorize a client with credentials, then call the Gmail API.
-authorize(JSON.parse(content), listMessages);
-});
-
-//Where the GET requests come from
-app.get('/list', (req, res) => {
-    let messages = listMessages();
-res.send({messages: messages})
+    authorize(JSON.parse(content), listMessages);
 });
 
 /**
@@ -38,10 +32,10 @@ function authorize(credentials, callback) {
     // Check if we have previously stored a token.
     fs.readFile(TOKEN_PATH, (err, token) => {
         if (err) return getNewToken(oAuth2Client, callback);
-    oAuth2Client.setCredentials(JSON.parse(token));
-    auth = oAuth2Client;
-    callback(oAuth2Client);
-});
+        oAuth2Client.setCredentials(JSON.parse(token));
+        auth = oAuth2Client;
+        callback(oAuth2Client);
+    });
 }
 
 /**
@@ -62,18 +56,23 @@ function getNewToken(oAuth2Client, callback) {
     });
     rl.question('Enter the code from that page here: ', (code) => {
         rl.close();
-    oAuth2Client.getToken(code, (err, token) => {
-        if (err) return console.error('Error retrieving access token', err);
-    oAuth2Client.setCredentials(token);
-    // Store the token to disk for later program executions
-    fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
-        if (err) return console.error(err);
-    console.log('Token stored to', TOKEN_PATH);
-});
-    callback(oAuth2Client);
-});
-});
+        oAuth2Client.getToken(code, (err, token) => {
+            if (err) return console.error('Error retrieving access token', err);
+            oAuth2Client.setCredentials(token);
+            // Store the token to disk for later program executions
+            fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
+                if (err) return console.error(err);
+                console.log('Token stored to', TOKEN_PATH);
+            });
+            callback(oAuth2Client);
+        });
+    });
 }
+
+//Where the GET requests come from
+app.get('/list', (req, res) => {
+    listMessages();
+});
 
 /**
  * Lists the messages from Elder Shubin in the user's account.
@@ -87,27 +86,23 @@ function listMessages() {
         'q': 'from:nolen.shubin@myldsmail.net'
     }, (err, res) => {
         if (err) return err;
-    const msgs = res.data.messages;
-    console.log("Messages: ", msgs);
-    msgs.forEach(getMessage);
-});
+        const msgs = res.data.messages;
+        msgs.forEach(getMessage);
+    });
 }
 
-function getMessage(msg){
+function getMessage(msg, i, arr){
     const gmail = google.gmail({version: 'v1', auth});
     gmail.users.messages.get({
         'id': msg.id,
         'userId': 'me'
     }, (err, res) => {
         if (err) console.log(err);
-        let data = {
+        arr[i] = {
             date: res.data.internalDate * 1000,
             attachments: res.data.payload.parts,
-            labels: res.data.labelIds,
-            message: res.data.payload.body.data
+            snippet: res.data.snippet
         };
-        console.log("Buffed data: ", data);
-        return data;
     });
 }
 
