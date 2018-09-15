@@ -1,3 +1,4 @@
+
 const fs = require('fs');
 const express = require('express');
 const readline = require('readline');
@@ -70,12 +71,8 @@ function getNewToken(oAuth2Client, callback) {
 }
 
 //Where the GET requests come from
-
-/*Need to somehow get the messages from getMessages() to here, any ideas? even though the messages
- are being saved in arr, it's saved asynchronously and having troubles keeping the code flow */
-
 app.get('/list', (req, res) => {
-    listMessages();
+    res.send(listMessages());
 });
 
 /**
@@ -91,25 +88,24 @@ function listMessages() {
     }, (err, res) => {
         if (err) return err;
         const msgs = res.data.messages;
+        console.log(msgs);
         msgs.forEach(getMessage);
     });
 }
 
-//arr : msgs from above
-//msg : the selected item of arr (array used in the forEach method)
-//i : index of msg in arr
 function getMessage(msg, i, arr){
     const gmail = google.gmail({version: 'v1', auth});
     gmail.users.messages.get({
         'id': msg.id,
         'userId': 'me'
     }, (err, res) => {
-        if (err) console.log(err);
+        if (err) return err;
         arr[i] = {
             date: res.data.internalDate * 1000,
             attachments: res.data.payload.parts,
             snippet: res.data.snippet
         };
+        console.log(arr[i]);
     });
 }
 

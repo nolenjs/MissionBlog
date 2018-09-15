@@ -5,7 +5,7 @@ import {IMessage} from "../interface/IMessage";
 
 @Injectable()
 export class EmailService {
-  msgList;
+  msgList: IMessage[];
 
   constructor(private http: HttpClient) {
     this.getList();
@@ -13,7 +13,7 @@ export class EmailService {
 
   getList(): Observable<IMessage[]>{
     if (!this.msgList){
-      this.msgList = this.http.get<IMessage[]>('http://localhost:3000/');
+      this.msgList = this.http.get<IMessage[]>('http://localhost:3000/list');
       console.log(this.msgList);
     }
     return this.msgList;
