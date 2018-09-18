@@ -1,22 +1,29 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from "@angular/common/http";
-import {Observable} from "rxjs/Observable";
 import {IMessage} from "../interface/IMessage";
 
 @Injectable()
 export class EmailService {
-  msgList: IMessage[];
+  //msgList: IMessage[];
+  http = new XMLHttpRequest();
 
-  constructor(private http: HttpClient) {
-    this.getList();
+  constructor() {
+    this.getList()
   }
 
-  getList(): Observable<IMessage[]>{
-    if (!this.msgList){
-      this.msgList = this.http.get<IMessage[]>('http://localhost:3000/list');
-      console.log(this.msgList);
-    }
-    return this.msgList;
+  getList() {
+    this.http.open('GET', 'http://localhost:3300/list', true);
+    this.http.send();
+    this.http.onload = () => {
+      if (this.http.readyState === 4 && this.http.status === 200)
+        console.log(this.http.responseText);
+      else
+        console.error(this.http.statusText);
+    };
+    this.http.onerror = () => {
+      console.log(this.http.statusText);
+    };
+    this.http.send(null);
+    //console.log(this.msgList);
   }
 
 }

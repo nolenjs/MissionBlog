@@ -16,7 +16,7 @@ let auth;
 fs.readFile('credentials.json', (err, content) => {
     if (err) return console.log('Error loading client secret file:', err);
 // Authorize a client with credentials, then call the Gmail API.
-    authorize(JSON.parse(content), listMessages);
+    authorize(JSON.parse(content), hello);
 });
 
 /**
@@ -72,42 +72,65 @@ function getNewToken(oAuth2Client, callback) {
 
 //Where the GET requests come from
 app.get('/list', (req, res) => {
-    res.send(listMessages());
+    const gmail = google.gmail({version: 'v1', auth});
+    gmail.users.messages.list({
+        'userId': 'me',
+        'q': 'from:nolen.shubin@myldsmail.net'
+    }, (err, resp) => {
+        if (err) return err;
+        const msgs = resp.data.messages;
+        console.log(msgs);
+        const messages = msgs.map((msg) => {
+            const respo = msg;
+            //console.log('new stuff', internalDate, snippet, parts);
+            return {
+                date: respo.data.internalDate * 1000,
+                attachments: respo.data.payload.parts,
+                snippet: respo.data.snippet
+            }
+        });
+        res.send(messages);
+    });
 });
-
+function hello(authoritah) {
+    console.log("something");
+}
 /**
  * Lists the messages from Elder Shubin in the user's account.
  *
  * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
  */
-function listMessages() {
-    const gmail = google.gmail({version: 'v1', auth});
-    gmail.users.messages.list({
-        'userId': 'me',
-        'q': 'from:nolen.shubin@myldsmail.net'
-    }, (err, res) => {
-        if (err) return err;
-        const msgs = res.data.messages;
-        console.log(msgs);
-        msgs.forEach(getMessage);
-    });
-}
-
-function getMessage(msg, i, arr){
-    const gmail = google.gmail({version: 'v1', auth});
-    gmail.users.messages.get({
-        'id': msg.id,
-        'userId': 'me'
-    }, (err, res) => {
-        if (err) return err;
-        arr[i] = {
-            date: res.data.internalDate * 1000,
-            attachments: res.data.payload.parts,
-            snippet: res.data.snippet
-        };
-        console.log(arr[i]);
-    });
-}
+// const listMessages = () => {
+//     const gmail = google.gmail({version: 'v1', auth});
+//     gmail.users.messages.list({
+//         'userId': 'me',
+//         'q': 'from:nolen.shubin@myldsmail.net'
+//     }, (err, res) => {
+//         if (err) return err;
+//         const msgs = res.data.messages;
+//         console.log(msgs);
+//         msgs.forEach(getMessage);
+//         const messages = msgs.map((message) => {
+//            return getMessage(message)
+//         })
+//     });
+// }
+//
+// function getMessage(msg, i, arr){
+//     const gmail = google.gmail({version: 'v1', auth});
+//     gmail.users.messages.get({
+//         'id': msg.id,
+//         'userId': 'me'
+//     }, (err, res) => {
+//         if (err) return err;
+//         arr[i] = {
+//             date: res.data.internalDate * 1000,
+//             attachments: res.data.payload.parts,
+//             snippet: res.data.snippet
+//         };
+//         //console.log(arr[i]);
+//     });
+// }
 
 app.listen(3300, () => {
     console.log('listening on port 3300')

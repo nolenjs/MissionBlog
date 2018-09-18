@@ -6,21 +6,13 @@ import {IMessage} from "../../interface/IMessage";
   selector: 'page-list',
   templateUrl: 'list.html'
 })
-export class ListPage implements OnDestroy, OnInit{
+export class ListPage implements OnInit{
   list: IMessage[];
   sub;
   constructor(private email: EmailService) {}
 
   ngOnInit() {
-    this.sub = this.email.getList()
-      .subscribe((data: IMessage[]) => {
-        this.list = data;
-        console.log(this.list);
-      })
-  }
-
-  ngOnDestroy(){
-    this.sub.unsubscribe();
+    this.sub = this.email.getList();
   }
 
   showMessages(){
